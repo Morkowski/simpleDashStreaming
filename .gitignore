@@ -1,0 +1,4 @@
+source
+public/media
+node_modules
+.cache
