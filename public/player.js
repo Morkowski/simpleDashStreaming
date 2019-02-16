@@ -15,10 +15,13 @@
 
         window.player = player;
         player.addEventListener('error', onErrorEvent);
-        player.load('./media/live.mpd').then(function () {
+        player.load('media/live.mpd').then(function () {
             console.log('The video has now been loaded!');
+            player.getTracks();
         }).catch(onError);
     }
+
+    // player.selectVariantTrack(player.getVariantTracks()[1]);
 
     function onErrorEvent(event) {
         onError(event.detail);
