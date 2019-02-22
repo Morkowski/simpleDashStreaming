@@ -1,37 +1,16 @@
 (function () {
+    const manifestUri = 'media/live.mpd';
+
     function handleChangeQuality(event) {
-        if (event.target.value === 'auto') {
+        const buttonId = event.target.id;
+        if (buttonId === 'auto') {
             window.player.configure({ abr: { enabled: true }});
             return;
         }
 
         window.player.configure({ abr: { enabled: false }});
-
-        var variantTracks = player.getVariantTracks();
-        var selectedVariantTrack = variantTracks.find(variantTrack => variantTrack.id.toString() === event.target.value);
-        window.player.selectVariantTrack(selectedVariantTrack);
-    }
-
-    function addOption({ label, selectElement, id }) {
-        var optionElement = document.createElement('option');
-        optionElement.innerHTML = label;
-        optionElement.value = id;
-        selectElement.appendChild(optionElement);
-    }
-
-    function addQualitySwitcher() {
-        var variantTracks = player.getVariantTracks();
-         if(variantTracks.length >= 2) {
-            var switcher = document.getElementById('switcher');
-            switcher.addEventListener('change', handleChangeQuality);
-
-            addOption({ label: 'auto', id: 'auto', selectElement: switcher });
-
-            variantTracks.map(function(variantTrack) {
-                var label = variantTrack.width + '/' + variantTrack.height;
-                addOption({ label: label, id: variantTrack.id, selectElement: switcher });
-            });
-         }
+        const variantTracks = player.getVariantTracks();
+        window.player.selectVariantTrack(variantTracks[parseInt(buttonId)]);
     }
 
     function initApp() {
@@ -45,15 +24,16 @@
     }
 
     function initPlayer() {
-        var video = document.getElementById('video');
-        var player = new shaka.Player(video);
+        const video = document.getElementById('video');
+        const player = new shaka.Player(video);
 
         window.player = player;
         player.addEventListener('error', onErrorEvent);
-        player.load('media/live.mpd').then(function () {
+        player.load(manifestUri).then(function () {
             console.log('The video has now been loaded!');
-            addQualitySwitcher();
-
+            document.getElementById('auto').addEventListener('click', handleChangeQuality);
+            document.getElementById('0').addEventListener('click', handleChangeQuality);
+            document.getElementById('1').addEventListener('click', handleChangeQuality);
         }).catch(onError);
     }
 
