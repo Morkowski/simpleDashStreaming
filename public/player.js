@@ -1,4 +1,39 @@
 (function () {
+    function handleChangeQuality(event) {
+        if (event.target.value === 'auto') {
+            window.player.configure({ abr: { enabled: true }});
+            return;
+        }
+
+        window.player.configure({ abr: { enabled: false }});
+
+        var variantTracks = player.getVariantTracks();
+        var selectedVariantTrack = variantTracks.find(variantTrack => variantTrack.id.toString() === event.target.value);
+        window.player.selectVariantTrack(selectedVariantTrack);
+    }
+
+    function addOption({ label, selectElement, id }) {
+        var optionElement = document.createElement('option');
+        optionElement.innerHTML = label;
+        optionElement.value = id;
+        selectElement.appendChild(optionElement);
+    }
+
+    function addQualitySwitcher() {
+        var variantTracks = player.getVariantTracks();
+         if(variantTracks.length >= 2) {
+            var switcher = document.getElementById('switcher');
+            switcher.addEventListener('change', handleChangeQuality);
+
+            addOption({ label: 'auto', id: 'auto', selectElement: switcher });
+
+            variantTracks.map(function(variantTrack) {
+                var label = variantTrack.width + '/' + variantTrack.height;
+                addOption({ label: label, id: variantTrack.id, selectElement: switcher });
+            });
+         }
+    }
+
     function initApp() {
         shaka.polyfill.installAll();
 
@@ -17,11 +52,10 @@
         player.addEventListener('error', onErrorEvent);
         player.load('media/live.mpd').then(function () {
             console.log('The video has now been loaded!');
-            player.getTracks();
+            addQualitySwitcher();
+
         }).catch(onError);
     }
-
-    // player.selectVariantTrack(player.getVariantTracks()[1]);
 
     function onErrorEvent(event) {
         onError(event.detail);
