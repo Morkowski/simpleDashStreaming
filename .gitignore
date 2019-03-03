@@ -1,4 +1,4 @@
 source
-public/media
+public/media/*
 node_modules
 .cache
