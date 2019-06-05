@@ -1,6 +1,7 @@
 # Simple DASH streaming
 
 Kody źródłowe dla artykułu na temat własnego streamingu na żywo
+https://geek.justjoin.it/jak-stworzyc-wlasny-live-streaming/
 
 Dodatkowo w pliku encode_camera.bat znajduje się kod pokazujący przechwytywanie treści z mikrofonu oraz kamery internetowej.
 
